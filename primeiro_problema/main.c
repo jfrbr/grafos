@@ -67,7 +67,8 @@ int main(){
 
 		for (i = 0; i < m; ++i){
 			if ( FIND ( Edges[i].src ) != FIND(Edges[i].dest) ){
-				printf("%d %d\n",Edges[i].src, Edges[i].dest);
+				if (Edges[i].src < Edges[i].dest) printf("%d %d\n",Edges[i].src, Edges[i].dest);
+				else printf("%d %d\n",Edges[i].dest, Edges[i].src);
 				UNION(Edges[i].src, Edges[i].dest);
 			}
 		}
