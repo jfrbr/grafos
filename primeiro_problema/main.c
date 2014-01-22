@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_VERTEX 100
-#define MAX_EDGES 5000
+#define MAX_VERTEX 200
+#define MAX_EDGES 20000
 
 
 //UNION FIND
