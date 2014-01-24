@@ -10,10 +10,7 @@ int g[MAX][MAX];
 int parent[MAX];
 int queue[MAX],ind;
 
-// queue implementation
-
 void push(int elem){
-	//printf("Inserindo o %d na posicao %d\n",elem,ind);
 	queue[ind++] = elem;
 }
 
@@ -22,7 +19,6 @@ int front(){
 }
 
 void pop(){
-	//printf("Removendo\n");
 	int i;
 	for (i=1; i <= ind; ++i){
 		queue[i-1] = queue[i];
@@ -42,7 +38,6 @@ void print(){
 	printf("\n");
 }
 
-// max flow algorithm
 
 int f,s,t;
 
@@ -68,31 +63,28 @@ int max_flow(int src, int dest){
 
 	int flow=0,i,dist[MAX];
 	memset(parent,-1,sizeof(parent));
-	memset(queue,0,sizeof(queue));
-	ind = f = 0;
 
 	while (1){
 
 		f = 0;
 
+		memset(queue,0,sizeof(queue));
+		ind = 0;
 		memset(dist,-1,sizeof(dist));
 
 		push(src);
-		//print();
 		dist[src] = 0;
 
 		while ( !empty() ){
 
 			int u = front();
 			pop();
-		//	print();
 			if (u == dest) break;
 
 			for (i=1;i<=n;++i){
 				if ( g[u][i] > 0 && dist[i] == -1 ){
 					dist[i] = dist[u] + 1 ;
 					push(i);
-	//				print();
 					parent[i] = u;
 				}
 			}	
@@ -102,7 +94,6 @@ int max_flow(int src, int dest){
 		augment_path(dest,INF);
 
 		if (f == 0) break;
-		//printf("f = %d\n",f);
 		flow += f;
 	}
 
@@ -122,19 +113,16 @@ int main(){
 		s = t = 0;
 
 		scanf("%d %d %d\n",&s,&t,&c);
-//		printf("Source = %d | Destiny = %d\n",s,t);
 
 
 		for (i=0;i<c;++i){
 			scanf("%d %d %d\n",&a,&b,&w);
 			g[a][b] = w;
 			g[b][a] = w;
-//			printf("%d %d %d\n",a,b,w);
 		}
 
 		int res1 = max_flow(s,t);
 		
-	//	int res2 = max_flow(t,s);
 
 		printf("Network %d\nThe bandwidth is %d.\n\n",tests++, res1);
 	
