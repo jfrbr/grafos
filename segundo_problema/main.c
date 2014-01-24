@@ -13,7 +13,7 @@ int queue[MAX],ind;
 // queue implementation
 
 void push(int elem){
-	printf("Index = %d\n",ind);
+	//printf("Inserindo o %d na posicao %d\n",elem,ind);
 	queue[ind++] = elem;
 }
 
@@ -22,6 +22,7 @@ int front(){
 }
 
 void pop(){
+	//printf("Removendo\n");
 	int i;
 	for (i=1; i <= ind; ++i){
 		queue[i-1] = queue[i];
@@ -31,6 +32,14 @@ void pop(){
 
 int empty(){
 	return ind == 0 ? 1 : 0;
+}
+void print(){
+	printf("Queue:");
+	int i;
+	for(i=0; i < ind; ++i){
+		printf("%d ",queue[i]);
+	}
+	printf("\n");
 }
 
 // max flow algorithm
@@ -58,34 +67,42 @@ void augment_path( int v, int min_edge ){
 int max_flow(int src, int dest){
 
 	int flow=0,i,dist[MAX];
-	memset(dist,0,sizeof(dist));
+	memset(parent,-1,sizeof(parent));
+	memset(queue,0,sizeof(queue));
+	ind = f = 0;
 
 	while (1){
 
 		f = 0;
 
-		push(s);
-		dist[s] = 0;
+		memset(dist,-1,sizeof(dist));
+
+		push(src);
+		//print();
+		dist[src] = 0;
 
 		while ( !empty() ){
 
 			int u = front();
 			pop();
-			if (u == t) break;
+		//	print();
+			if (u == dest) break;
 
 			for (i=1;i<=n;++i){
-				if ( g[u][i] > 0 && !dist[i] ){
+				if ( g[u][i] > 0 && dist[i] == -1 ){
 					dist[i] = dist[u] + 1 ;
 					push(i);
+	//				print();
 					parent[i] = u;
 				}
 			}	
 		
 		}
-
-		augment_path(t,INF);
+		
+		augment_path(dest,INF);
 
 		if (f == 0) break;
+		//printf("f = %d\n",f);
 		flow += f;
 	}
 
@@ -97,14 +114,15 @@ int main(){
 	int i,c,a,b,w,tests=1;
 
 	while ( scanf("%d\n",&n) == 1 && n ){
-
+		
 		memset(g,0,sizeof(g));
 		memset(parent,-1,sizeof(parent));
 		memset(queue,0,sizeof(queue));
 
-		f = s = t = 0;
+		s = t = 0;
 
 		scanf("%d %d %d\n",&s,&t,&c);
+//		printf("Source = %d | Destiny = %d\n",s,t);
 
 
 		for (i=0;i<c;++i){
@@ -114,9 +132,11 @@ int main(){
 //			printf("%d %d %d\n",a,b,w);
 		}
 
-		int res = max_flow(s,t);
+		int res1 = max_flow(s,t);
+		
+	//	int res2 = max_flow(t,s);
 
-		printf("Rede %d\nA largura de banda é %d.\n",tests++,res);
+		printf("Network %d\nThe bandwidth is %d.\n\n",tests++, res1);
 	
 	}
 	return 0;
