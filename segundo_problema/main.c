@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <limits.h>
 
-#define MAX 150
+#define MAX 1000
 #define INF 2000000000
 
 int n;
@@ -15,7 +16,7 @@ void push(int elem){
 }
 
 int front(){
-	return ind > 0 ? queue[0] : -999 ;
+	return queue[0];
 }
 
 void pop(){
@@ -67,10 +68,11 @@ int max_flow(int src, int dest){
 	while (1){
 
 		f = 0;
-
+	
+		memset(parent,-1,sizeof(parent));
 		memset(queue,0,sizeof(queue));
 		ind = 0;
-		memset(dist,-1,sizeof(dist));
+		for (i=0;i <= n; ++i) dist[i] = INT_MAX;
 
 		push(src);
 		dist[src] = 0;
@@ -82,7 +84,7 @@ int max_flow(int src, int dest){
 			if (u == dest) break;
 
 			for (i=1;i<=n;++i){
-				if ( g[u][i] > 0 && dist[i] == -1 ){
+				if ( g[u][i] > 0 && dist[i] == INT_MAX ){
 					dist[i] = dist[u] + 1 ;
 					push(i);
 					parent[i] = u;
@@ -91,7 +93,7 @@ int max_flow(int src, int dest){
 		
 		}
 		
-		augment_path(dest,INF);
+		augment_path(dest,INT_MAX);
 
 		if (f == 0) break;
 		flow += f;
@@ -117,13 +119,12 @@ int main(){
 
 		for (i=0;i<c;++i){
 			scanf("%d %d %d\n",&a,&b,&w);
-			g[a][b] = w;
-			g[b][a] = w;
+			g[a][b] += w;
+			g[b][a] += w;
 		}
 
 		int res1 = max_flow(s,t);
 		
-
 		printf("Network %d\nThe bandwidth is %d.\n\n",tests++, res1);
 	
 	}
